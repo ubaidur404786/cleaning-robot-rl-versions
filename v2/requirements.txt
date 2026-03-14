@@ -1,0 +1,21 @@
+# =============================================================================
+# CLEANING ROBOT RL - REQUIREMENTS
+# =============================================================================
+# This file contains all the Python packages needed to run this project.
+# 
+# To install all dependencies, run:
+#     pip install -r requirements.txt
+#
+# Package explanations:
+# - gymnasium: The main RL environment library (successor to OpenAI Gym)
+# - numpy: For numerical operations and Q-table storage
+# - matplotlib: For plotting training rewards
+# - pygame: For 2D visualization of the robot and house
+# - torch: For DQN neural network (Deep Q-Network)
+# =============================================================================
+
+gymnasium>=0.29.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+pygame>=2.5.0
+torch>=2.0.0
