@@ -1,23 +1,4 @@
-"""
-================================================================================
-UTILITY HELPERS - Common Utility Functions
-================================================================================
-
-PROJECT: Cleaning Robot using Reinforcement Learning (Q-Learning)
-FILE: utils/helpers.py
-PURPOSE: Reusable helper functions for training and testing
-
-================================================================================
-📚 OVERVIEW
-================================================================================
-
-This module provides common utility functions used across the project:
-- Time formatting for training duration display
-- Progress bar for visual training progress
-- Console output formatting helpers
-
-================================================================================
-"""
+"""Small helper utilities used across training and testing scripts."""
 
 import sys
 import time
@@ -346,9 +327,7 @@ class Timer:
         return format_time(self.elapsed())
 
 
-# ================================================================================
-# MODULE TEST
-# ================================================================================
+# Module test
 
 if __name__ == "__main__":
     print("\n" + "=" * 60)

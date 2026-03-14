@@ -1,87 +1,4 @@
-"""
-================================================================================
-SARSA AGENT - On-Policy Reinforcement Learning Implementation
-================================================================================
-
-PROJECT: Cleaning Robot using Reinforcement Learning (SARSA)
-FILE: agent/sarsa_agent.py
-PURPOSE: SARSA agent that learns cleaning behavior on-policy
-
-================================================================================
-📚 SARSA ALGORITHM OVERVIEW
-================================================================================
-
-SARSA is a model-free, ON-POLICY reinforcement learning algorithm.
-Unlike Q-Learning which uses the *best* next action to update Q-values,
-SARSA uses the *actual* next action chosen by the current policy.
-
-The name SARSA comes from the quintuple used in each update:
-  (S, A, R, S', A') → (State, Action, Reward, next State, next Action)
-
-KEY CONCEPTS:
-
-1. Q-VALUE: Q(s, a) = expected total reward starting from state s,
-            taking action a, and following the CURRENT policy
-
-2. Q-TABLE: A lookup table storing Q-values for all (state, action) pairs
-            Size = num_states × num_actions
-
-3. UPDATE RULE:
-   Q(s,a) ← Q(s,a) + α[r + γ·Q(s',a') - Q(s,a)]
-   
-   Where:
-   - s  = current state
-   - a  = action taken
-   - r  = reward received
-   - s' = next state
-   - a' = next action ACTUALLY CHOSEN by the policy (not max!)
-   - α (alpha) = learning rate
-   - γ (gamma) = discount factor
-
-================================================================================
-⚡ ON-POLICY vs OFF-POLICY
-================================================================================
-
-Q-LEARNING (off-policy):
-  - Updates use max(Q(s',a')) regardless of what action is actually taken next
-  - Learns the OPTIMAL policy while following an exploratory policy
-  - More aggressive: assumes optimal future behaviour even while exploring
-
-SARSA (on-policy):
-  - Updates use Q(s', a') where a' is the action actually chosen next
-  - Learns the value of the CURRENT policy (including exploration)
-  - More conservative: accounts for the fact that exploration may happen
-  - Tends to learn safer policies (avoids risky states near penalties)
-
-PRACTICAL DIFFERENCE:
-  Because SARSA incorporates the exploration noise into its value estimates,
-  it tends to be more cautious. If a state is near a wall (penalty), SARSA
-  penalises it more because the epsilon-random actions might hit the wall,
-  whereas Q-Learning ignores that risk (it assumes optimal future moves).
-
-================================================================================
-🎯 TRAINING LOOP DIFFERENCE
-================================================================================
-
-Q-Learning loop:
-  1. Observe state s
-  2. Choose action a (ε-greedy)
-  3. Take action a → get reward r, next state s'
-  4. Update: Q(s,a) ← ... + γ·max Q(s',·) ...
-  5. s ← s'
-
-SARSA loop:
-  1. Observe state s, choose action a (ε-greedy)
-  2. Take action a → get reward r, next state s'
-  3. Choose NEXT action a' (ε-greedy)           ← key difference
-  4. Update: Q(s,a) ← ... + γ·Q(s',a') ...     ← uses a', not max
-  5. s ← s', a ← a'
-
-Notice that SARSA selects the next action BEFORE updating, so the update
-reflects what the agent will actually do, not what it *could* do.
-
-================================================================================
-"""
+"""SARSA agent with on-policy tabular updates."""
 
 import numpy as np
 import pickle
@@ -89,31 +6,7 @@ import os
 
 
 class SarsaAgent:
-    """
-    ============================================================================
-    SARSA AGENT - On-Policy Reinforcement Learning
-    ============================================================================
-    
-    This agent learns behavior using the SARSA algorithm.
-    It maintains a Q-table identical in structure to Q-Learning, but
-    updates values using the actual next action chosen by the policy
-    rather than the greedy maximum.
-    
-    ON-POLICY DESIGN:
-    - The update rule reflects the agent's own exploratory behavior
-    - Values learned account for the randomness of epsilon-greedy
-    - Tends to produce more conservative / safer policies
-    
-    LEARNING PROCESS:
-    1. Choose first action for the episode
-    2. Take action, observe reward and next state
-    3. Choose next action (BEFORE updating)
-    4. Update Q(s,a) using actual next action's Q-value
-    5. Shift: s ← s', a ← a'
-    6. Repeat until episode ends
-    
-    ============================================================================
-    """
+    """Tabular SARSA agent."""
     
     def __init__(
         self,
@@ -201,9 +94,7 @@ class SarsaAgent:
         print(f"  Epsilon decay:      {epsilon_decay}")
         print("=" * 65)
     
-    # ==========================================================================
-    # Q-TABLE ACCESS
-    # ==========================================================================
+    # Q-table access
     
     def _get_q_values(self, state):
         """
@@ -228,9 +119,7 @@ class SarsaAgent:
             )
         return self.q_table[state]
     
-    # ==========================================================================
-    # ACTION SELECTION (identical to Q-Learning for fair comparison)
-    # ==========================================================================
+    # Action selection (same policy as Q-Learning)
     
     def choose_action(self, state, training=True, eval_epsilon=0.02):
         """
@@ -283,9 +172,7 @@ class SarsaAgent:
         best_actions = np.where(q_values == max_q)[0]
         return np.random.choice(best_actions)
     
-    # ==========================================================================
-    # SARSA UPDATE RULE (the core difference from Q-Learning)
-    # ==========================================================================
+    # SARSA update (main difference from Q-Learning)
     
     def learn(self, state, action, reward, next_state, next_action, done):
         """
@@ -535,9 +422,7 @@ class SarsaAgent:
         print("=" * 65)
 
 
-# ================================================================================
-# MODULE TEST - Run this file directly to test the SARSA agent
-# ================================================================================
+# Module test
 
 if __name__ == "__main__":
     print("\n" + "=" * 65)

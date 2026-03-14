@@ -1,87 +1,4 @@
-"""
-================================================================================
-DQN AGENT - Deep Q-Network Reinforcement Learning Implementation
-================================================================================
-
-PROJECT: Cleaning Robot using Reinforcement Learning (DQN)
-FILE: agent/dqn_agent.py
-PURPOSE: DQN agent that learns cleaning behavior using a neural network
-         to approximate Q-values instead of a lookup table.
-
-================================================================================
-DEEP Q-NETWORK (DQN) ALGORITHM OVERVIEW
-================================================================================
-
-DQN is a model-free, OFF-POLICY reinforcement learning algorithm that uses
-a neural network to approximate the Q-value function.  Unlike tabular
-Q-Learning which stores Q-values in a dictionary, DQN uses a neural network
-that can generalise across similar states.
-
-KEY CONCEPTS:
-
-1. Q-NETWORK:
-   A neural network f(s; θ) → [Q(s,a0), Q(s,a1), ..., Q(s,a5)]
-   Input:  a feature vector describing the current state
-   Output: estimated Q-value for each action
-
-2. EXPERIENCE REPLAY:
-   Instead of learning from transitions as they arrive (correlated data),
-   DQN stores transitions in a replay buffer and trains on random mini-
-   batches.  This breaks correlation, improves sample efficiency, and
-   stabilises training.
-
-3. TARGET NETWORK:
-   A separate copy of the Q-network (with frozen weights) is used to
-   compute the target Q-values.  This prevents the "moving target" problem
-   where the network chases its own changing predictions.  The target
-   network is periodically synced with the policy network.
-
-4. UPDATE RULE:
-   loss = MSE( Q_policy(s,a) ,  r + γ · max Q_target(s', ·) )
-   
-   Where:
-   - Q_policy(s,a)          = current prediction from policy network
-   - Q_target(s', ·)        = next-state prediction from target network
-   - r + γ·max Q_target(·)  = TD target
-
-================================================================================
-DQN vs TABULAR Q-LEARNING
-================================================================================
-
-TABULAR Q-LEARNING:
-  - Stores one Q-value per (state, action) pair in a dictionary
-  - Can only handle discrete, finite state spaces
-  - No generalisation: each state is learned independently
-  - Memory grows linearly with visited states
-
-DQN:
-  - Approximates Q-values with a neural network
-  - Can handle continuous or high-dimensional state spaces
-  - Generalises: similar states share network weights
-  - Fixed memory footprint (network parameters)
-  - Requires experience replay + target network for stability
-
-================================================================================
-FEATURE VECTOR
-================================================================================
-
-Since the original environment returns an integer state for the Q-table,
-the DQN works with a richer feature vector extracted from the environment:
-
-  [0]     : robot_row  (normalised to 0-1)
-  [1]     : robot_col  (normalised to 0-1)
-  [2:25]  : dirt status of each of the 23 cleanable tiles (0 or 1)
-    [25:30] : one-hot movement history (came_from direction)
-    [30:40] : one-hot DNUT direction to nearest dirty tile
-
-Total input size = 40
-
-The feature extraction is handled externally (in main.py) via the helper
-function _env_to_features(env), keeping this agent class decoupled from
-the environment implementation.
-
-================================================================================
-"""
+"""DQN agent with replay buffer and target network."""
 
 import numpy as np
 import random
@@ -93,9 +10,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 
-# ==============================================================================
-# Q-NETWORK  (the neural network that approximates Q-values)
-# ==============================================================================
+# Q-network
 
 class QNetwork(nn.Module):
     """
@@ -127,30 +42,10 @@ class QNetwork(nn.Module):
         return self.fc3(x)
 
 
-# ==============================================================================
-# DQN AGENT
-# ==============================================================================
+# DQN agent
 
 class DQNAgent:
-    """
-    ============================================================================
-    DQN AGENT - Deep Q-Network Reinforcement Learning
-    ============================================================================
-
-    This agent learns behaviour using a neural network instead of a table.
-    It maintains two networks (policy + target), a replay buffer, and uses
-    mini-batch gradient descent for training.
-
-    Interface is designed to be compatible with the tabular agents
-    (QLearningAgent, SarsaAgent) so that the same training / testing loop
-    in main.py can drive all three algorithms.
-
-    KEY DIFFERENCES FROM TABULAR AGENTS:
-    - choose_action() receives a numpy feature vector, not an integer state
-    - learn() receives feature vectors for state and next_state
-    - save / load use torch.save / torch.load instead of pickle
-    ============================================================================
-    """
+    """Deep Q-Network agent."""
 
     def __init__(
         self,
@@ -546,9 +441,7 @@ class DQNAgent:
         print(f"  Weights {'kept' if keep_weights else 'reinitialised'}")
 
 
-# ==============================================================================
-# MODULE TEST — run this file directly to verify the DQN agent
-# ==============================================================================
+# Module test
 
 if __name__ == "__main__":
     print("\n" + "=" * 65)

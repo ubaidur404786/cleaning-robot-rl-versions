@@ -1,73 +1,4 @@
-"""
-================================================================================
-Q-LEARNING AGENT - Pure Reinforcement Learning Implementation
-================================================================================
-
-PROJECT: Cleaning Robot using Reinforcement Learning (Q-Learning)
-FILE: agent/q_learning_agent.py
-PURPOSE: Q-Learning agent that learns optimal cleaning behavior
-
-================================================================================
-📚 Q-LEARNING ALGORITHM OVERVIEW
-================================================================================
-
-Q-Learning is a model-free, off-policy reinforcement learning algorithm.
-The agent learns a Q-function (action-value function) that estimates the
-expected future reward for taking an action in a given state.
-
-KEY CONCEPTS:
-
-1. Q-VALUE: Q(s, a) = expected total reward starting from state s,
-            taking action a, and then following the optimal policy
-
-2. Q-TABLE: A lookup table storing Q-values for all (state, action) pairs
-            Size = num_states × num_actions
-
-3. UPDATE RULE (Bellman Equation):
-   Q(s,a) ← Q(s,a) + α[r + γ·max(Q(s',a')) - Q(s,a)]
-   
-   Where:
-   - s = current state
-   - a = action taken
-   - r = reward received
-   - s' = next state
-   - α (alpha) = learning rate (how fast to update)
-   - γ (gamma) = discount factor (importance of future rewards)
-
-================================================================================
-⚡ EPSILON-GREEDY EXPLORATION
-================================================================================
-
-The agent uses ε-greedy (epsilon-greedy) policy for action selection:
-
-- With probability ε: Take RANDOM action (exploration)
-- With probability 1-ε: Take BEST action from Q-table (exploitation)
-
-EXPLORATION vs EXPLOITATION:
-- Exploration: Try new actions to discover better strategies
-- Exploitation: Use known best actions to maximize reward
-
-Epsilon typically starts high (1.0 = 100% random) and decays over time
-to a small value (e.g., 0.01 = 1% random) as the agent learns.
-
-================================================================================
-🎯 PURE RL IMPLEMENTATION
-================================================================================
-
-This implementation is PURE Q-Learning:
-- NO hardcoded policies (no "if dirty then clean")
-- NO direction hints from the state
-- NO shortcuts or cheating
-
-The agent learns EVERYTHING through trial and error:
-- When to clean (learns that cleaning dirty tiles gives reward)
-- Where to go (learns room layouts through exploration)
-- How to navigate (learns which actions lead where)
-
-This takes more training episodes but demonstrates true RL learning!
-
-================================================================================
-"""
+"""Q-Learning agent with epsilon-greedy exploration and tabular updates."""
 
 import numpy as np
 import pickle
@@ -75,29 +6,7 @@ import os
 
 
 class QLearningAgent:
-    """
-    ============================================================================
-    Q-LEARNING AGENT - Pure Reinforcement Learning
-    ============================================================================
-    
-    This agent learns optimal behavior using the Q-Learning algorithm.
-    It maintains a Q-table that maps (state, action) pairs to expected
-    future rewards, and updates this table through experience.
-    
-    PURE RL DESIGN:
-    - No hardcoded decision rules
-    - No knowledge of environment dynamics
-    - Learns purely from rewards received
-    
-    LEARNING PROCESS:
-    1. Start with no knowledge (Q-table initialized to zeros or small values)
-    2. Take actions (random early on due to high epsilon)
-    3. Observe rewards and update Q-values
-    4. Gradually shift from exploration to exploitation
-    5. Eventually learn optimal policy
-    
-    ============================================================================
-    """
+    """Simple tabular Q-Learning agent."""
     
     def __init__(
         self,
@@ -169,18 +78,7 @@ class QLearningAgent:
         self.epsilon_end = epsilon_end
         self.epsilon_decay = epsilon_decay
         
-        # ======================================================================
-        # Q-TABLE INITIALIZATION
-        # ======================================================================
-        # The Q-table stores Q-values for all (state, action) pairs.
-        #
-        # We use a dictionary instead of a numpy array because:
-        # 1. Lazy initialization - only create entries for visited states
-        # 2. Memory efficient for sparse state spaces
-        # 3. Easy to save/load with pickle
-        #
-        # Each state maps to an array of Q-values (one per action):
-        #   q_table[state] = [Q(s,a0), Q(s,a1), ..., Q(s,a5)]
+        # Sparse table: only allocate states when visited.
         
         self.q_table = {}
         
@@ -194,7 +92,7 @@ class QLearningAgent:
         # PRINT INITIALIZATION INFO
         # ======================================================================
         print("=" * 65)
-        print("  Q-LEARNING AGENT INITIALIZED (Pure RL)")
+        print("  Q-LEARNING AGENT INITIALIZED")
         print("=" * 65)
         print(f"  State space:        {state_size} states")
         print(f"  Action space:       {action_size} actions")
@@ -620,9 +518,7 @@ class QLearningAgent:
         print("=" * 65)
 
 
-# ================================================================================
-# MODULE TEST - Run this file directly to test the agent
-# ================================================================================
+# Module test
 
 if __name__ == "__main__":
     print("\n" + "=" * 65)

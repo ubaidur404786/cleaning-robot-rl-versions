@@ -1,66 +1,14 @@
-"""
-================================================================================
-TESTING SCRIPT - Evaluate the Trained Q-Learning Agent
-================================================================================
-
-PROJECT: Cleaning Robot using Reinforcement Learning (Q-Learning)
-FILE: test.py
-PURPOSE: Test and evaluate the trained cleaning robot agent
-
-================================================================================
-📚 TESTING OVERVIEW
-================================================================================
-
-Testing differs from training in several key ways:
-
-TRAINING:
-- Epsilon-greedy exploration (random actions with probability ε)
-- Q-table updates after each action
-- Focus on learning, not performance
-
-TESTING:
-- Pure exploitation (ε = 0, always use best action)
-- No Q-table updates (frozen policy)
-- Focus on evaluating learned performance
-
-================================================================================
-🎯 TEST METRICS
-================================================================================
-
-The test script evaluates the agent on these metrics:
-
-1. AVERAGE REWARD:
-   - Higher is better
-   - Includes cleaning rewards (+20 to +50) and penalties
-
-2. TILES CLEANED:
-   - Out of 23 total tiles
-   - 100% completion = 23/23 tiles
-
-3. SUCCESS RATE:
-   - Percentage of episodes where ALL tiles are cleaned
-   - Target: 90%+ for well-trained agent
-
-4. STEPS TAKEN:
-   - Fewer steps = more efficient
-   - Shows if agent learns efficient paths
-
-5. COMPARISON TO RANDOM:
-   - How much better is trained agent vs random actions?
-   - Shows that learning actually occurred
-
-================================================================================
-"""
+"""Test a trained Q-Learning agent and compare against a random baseline."""
 
 import os
 import sys
 import time
 import numpy as np
 
-# Add parent directory to path for imports
+# Add project root to import path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Import our custom modules
+# Local imports
 from env.cleaning_env import CleaningEnv
 from agent.q_learning_agent import QLearningAgent
 from utils.helpers import format_time
@@ -115,9 +63,7 @@ def test(num_episodes=10, render=True, speed="normal", model_path="models/q_tabl
     print(f"    Speed:        {speed} ({fps} FPS)")
     print(f"    Model:        {model_path}")
     
-    # ==========================================================================
-    # STEP 1: CREATE ENVIRONMENT AND AGENT
-    # ==========================================================================
+    # Setup
     
     print("\n  Loading environment and agent...")
     
@@ -143,9 +89,7 @@ def test(num_episodes=10, render=True, speed="normal", model_path="models/q_tabl
     
     agent.load(model_path)
     
-    # ==========================================================================
-    # STEP 2: RUN TEST EPISODES (TRAINED AGENT)
-    # ==========================================================================
+    # Trained agent episodes
     
     print("\n" + "-" * 70)
     print("  Running Test Episodes (Trained Agent)")
@@ -196,9 +140,7 @@ def test(num_episodes=10, render=True, speed="normal", model_path="models/q_tabl
               f"Tiles={info['tiles_cleaned']:2d}/{env.num_cleanable} | "
               f"Steps={steps:3d} | {status}")
     
-    # ==========================================================================
-    # STEP 3: RUN RANDOM BASELINE FOR COMPARISON
-    # ==========================================================================
+    # Random baseline
     
     print("\n" + "-" * 70)
     print("  Running Random Baseline (for comparison)")
@@ -228,9 +170,7 @@ def test(num_episodes=10, render=True, speed="normal", model_path="models/q_tabl
     
     env_fast.close()
     
-    # ==========================================================================
-    # STEP 4: CALCULATE AND DISPLAY RESULTS
-    # ==========================================================================
+    # Summary
     
     print("\n" + "=" * 70)
     print("  TEST RESULTS SUMMARY")
@@ -283,9 +223,7 @@ def test(num_episodes=10, render=True, speed="normal", model_path="models/q_tabl
     
     print("\n" + "=" * 70)
     
-    # ==========================================================================
-    # STEP 5: CLEANUP
-    # ==========================================================================
+    # Cleanup
     
     env.close()
     
@@ -501,9 +439,7 @@ def compare_random_vs_trained(num_episodes=20, model_path="models/q_table.pkl"):
     print("\n" + "=" * 70)
 
 
-# ================================================================================
-# MAIN ENTRY POINT
-# ================================================================================
+# Main entry point
 
 if __name__ == "__main__":
     """

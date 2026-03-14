@@ -1,52 +1,4 @@
-"""
-================================================================================
-TRAINING SCRIPT - Train the Q-Learning Cleaning Robot
-================================================================================
-
-PROJECT: Cleaning Robot using Reinforcement Learning (Q-Learning)
-FILE: train.py
-PURPOSE: Training loop for the Q-Learning agent
-
-================================================================================
-📚 TRAINING PROCESS OVERVIEW
-================================================================================
-
-The training loop follows this structure for each episode:
-
-1. RESET: Start a new episode with all tiles dirty
-2. LOOP until episode ends:
-   a. Agent observes current state
-   b. Agent chooses action (epsilon-greedy)
-   c. Environment executes action
-   d. Environment returns reward and next state
-   e. Agent updates Q-table using Q-learning update rule
-   f. Move to next state
-3. END EPISODE: Decay epsilon, record statistics
-4. REPEAT for many episodes
-
-Each episode ends when:
-- All tiles are cleaned (success - terminated)
-- Maximum steps reached (truncated)
-
-================================================================================
-🎯 TRAINING PARAMETERS
-================================================================================
-
-NUMBER OF EPISODES:
-- More episodes = better learning (but takes longer)
-- For pure RL (no hints): 3000-5000 episodes recommended
-- For complex tasks: May need 10,000+ episodes
-
-EPSILON SCHEDULE:
-- Start: 1.0 (100% random exploration)
-- Decay: 0.998 per episode
-- End: 0.01 (1% random after many episodes)
-
-After ~1000 episodes with 0.998 decay: epsilon ≈ 0.13 (13% exploration)
-After ~2000 episodes: epsilon ≈ 0.018 (mostly exploitation)
-
-================================================================================
-"""
+"""Train the Q-Learning agent for the cleaning environment."""
 
 import os
 import sys
@@ -54,10 +6,10 @@ import time
 import numpy as np
 from datetime import datetime
 
-# Add parent directory to path for imports
+# Add project root to import path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Import our custom modules
+# Local imports
 from env.cleaning_env import CleaningEnv
 from agent.q_learning_agent import QLearningAgent
 from utils.helpers import print_progress_bar, format_time
@@ -99,7 +51,7 @@ def train(num_episodes=5000, render_every=1000, save_path="models/q_table.pkl"):
         - steps_per_episode: Steps taken per episode
     """
     print("\n" + "=" * 70)
-    print("  TRAINING Q-LEARNING CLEANING ROBOT (Pure RL)")
+    print("  TRAINING Q-LEARNING CLEANING ROBOT")
     print("=" * 70)
     print(f"\n  Training Parameters:")
     print(f"    Episodes:         {num_episodes}")
@@ -108,9 +60,7 @@ def train(num_episodes=5000, render_every=1000, save_path="models/q_table.pkl"):
     print(f"    Start time:       {datetime.now().strftime('%H:%M:%S')}")
     print("\n" + "-" * 70)
     
-    # ==========================================================================
-    # STEP 1: CREATE ENVIRONMENT AND AGENT
-    # ==========================================================================
+    # Create environment and agent
     
     # Create environment (no rendering for training speed)
     env = CleaningEnv(render_mode=None)
@@ -129,9 +79,7 @@ def train(num_episodes=5000, render_every=1000, save_path="models/q_table.pkl"):
         epsilon_decay=0.998                    # Faster decay → ε ≈ 0.002 at ep 3000
     )
     
-    # ==========================================================================
-    # STEP 2: INITIALIZE TRACKING VARIABLES
-    # ==========================================================================
+    # Tracking
     
     # Lists to store training metrics
     episode_rewards = []           # Total reward per episode
@@ -146,9 +94,7 @@ def train(num_episodes=5000, render_every=1000, save_path="models/q_table.pkl"):
     total_successes = 0            # Total successful episodes
     start_time = time.time()       # Training start time
     
-    # ==========================================================================
-    # STEP 3: MAIN TRAINING LOOP
-    # ==========================================================================
+    # Main loop
     
     print(f"\n  Starting training at epsilon = {agent.epsilon:.2f}")
     print("  " + "-" * 68)
@@ -251,9 +197,7 @@ def train(num_episodes=5000, render_every=1000, save_path="models/q_table.pkl"):
                   f"ε: {agent.epsilon:.3f} | "
                   f"Time: {format_time(elapsed)}")
     
-    # ==========================================================================
-    # STEP 4: TRAINING COMPLETE - Save and report results
-    # ==========================================================================
+    # Wrap up and report
     
     total_time = time.time() - start_time
     
@@ -281,16 +225,12 @@ def train(num_episodes=5000, render_every=1000, save_path="models/q_table.pkl"):
     print(f"    Total Time:        {format_time(total_time)}")
     print(f"    Time/Episode:      {total_time/num_episodes*1000:.1f}ms")
     
-    # ==========================================================================
-    # STEP 5: SAVE THE TRAINED MODEL
-    # ==========================================================================
+    # Save model
     
     print(f"\n  Saving trained model...")
     agent.save(save_path)
     
-    # ==========================================================================
-    # STEP 6: GENERATE TRAINING PLOTS
-    # ==========================================================================
+    # Save plots
     
     print(f"\n  Generating training plots...")
     
@@ -310,9 +250,7 @@ def train(num_episodes=5000, render_every=1000, save_path="models/q_table.pkl"):
     except Exception as e:
         print(f"    Warning: Could not generate plots: {e}")
     
-    # ==========================================================================
-    # STEP 7: CLEANUP
-    # ==========================================================================
+    # Cleanup
     
     env.close()
     if env_visual:
@@ -354,9 +292,7 @@ def train_with_baseline(num_episodes=3000, save_path="models/q_table.pkl"):
     print("  TRAINING WITH BASELINE COMPARISON")
     print("=" * 70)
     
-    # ======================================================================
-    # Run baseline (random agent) first
-    # ======================================================================
+    # Run random baseline first
     print("\n  Running random baseline (100 episodes)...")
     
     env = CleaningEnv(render_mode=None)
@@ -415,9 +351,7 @@ def train_with_baseline(num_episodes=3000, save_path="models/q_table.pkl"):
     return results
 
 
-# ================================================================================
-# MAIN ENTRY POINT
-# ================================================================================
+# Main entry point
 
 if __name__ == "__main__":
     """

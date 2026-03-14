@@ -1,26 +1,4 @@
-"""
-================================================================================
-PLOTTING UTILITIES - Visualization Functions for Training Results
-================================================================================
-
-PROJECT: Cleaning Robot using Reinforcement Learning (Q-Learning)
-FILE: utils/plotting.py
-PURPOSE: Create visualizations of training progress and agent performance
-
-================================================================================
-📚 OVERVIEW
-================================================================================
-
-This module provides plotting functions for visualizing:
-1. Training Progress - Rewards, completion rates over episodes
-2. Learning Curves - How the agent improves over time
-3. Performance Comparisons - Trained agent vs random baseline
-
-All plots use Matplotlib and are designed to help understand
-how the RL agent learns and performs.
-
-================================================================================
-"""
+"""Plotting helpers for training curves and basic comparisons."""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -516,9 +494,7 @@ def _moving_average(data, window):
     return result
 
 
-# ================================================================================
-# MODULE TEST
-# ================================================================================
+# Module test
 
 if __name__ == "__main__":
     print("\n" + "=" * 60)

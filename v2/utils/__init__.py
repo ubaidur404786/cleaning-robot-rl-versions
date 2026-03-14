@@ -1,9 +1,4 @@
-# =============================================================================
-# UTILITIES - utils/__init__.py
-# =============================================================================
-# This file makes the 'utils' folder a Python package.
-# It allows us to import utility functions from other files.
-# =============================================================================
+# Utility exports
 
 from utils.plotting import plot_training_results, plot_comparison
 from utils.helpers import (

@@ -1,39 +1,4 @@
-"""
-================================================================================
-MAIN ENTRY POINT - Unified RL Training, Testing & Comparison Dashboard
-================================================================================
-
-PROJECT: Cleaning Robot using Reinforcement Learning
-FILE: main.py
-PURPOSE: Interactive menu for Q-Learning, SARSA & DQN — train, test, visualise
-         optimal paths, and compare all algorithms side by side.
-
-================================================================================
-FEATURES
-================================================================================
-
- --- TRAINING ---
- [1]  Train Q-Learning Agent
- [2]  Train SARSA Agent
- [3]  Train DQN Agent
-
- --- TESTING (Pygame UI) ---
- [4]  Test  Q-Learning Agent
- [5]  Test  SARSA Agent
- [6]  Test  DQN Agent
-
- --- OPTIMAL PATHS ---
- [7]  Show Optimal Path - Q-Learning
- [8]  Show Optimal Path - SARSA
- [9]  Show Optimal Path - DQN
-
- --- COMPARISON ---
- [10] Compare All Algorithms (Dashboard)
- [11] Quick Train & Compare All
- [0]  Exit
-
-================================================================================
-"""
+"""Main menu and utilities for training/testing Q-Learning, SARSA, and DQN."""
 
 import os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
@@ -43,9 +8,7 @@ import pickle
 import numpy as np
 from datetime import datetime
 
-# ============================================================================
-# IMPORT PROJECT MODULES
-# ============================================================================
+# Project imports
 
 try:
     from env.cleaning_env import (
@@ -67,14 +30,12 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-# ============================================================================
-# CONFIGURATION
-# ============================================================================
+# Config
 
 MODELS_DIR = "models"
 PLOTS_DIR  = "plots"
 
-# --- Shared hyper-parameters (tabular agents) --------------------------------
+# Shared defaults (tabular)
 DEFAULT_EPISODES      = 5000
 DEFAULT_LEARNING_RATE = 0.15
 DEFAULT_DISCOUNT      = 0.99
@@ -82,7 +43,7 @@ DEFAULT_EPS_START     = 1.0
 DEFAULT_EPS_END       = 0.02
 DEFAULT_EPS_DECAY     = 0.998
 
-# --- DQN-specific defaults ---------------------------------------------------
+# DQN defaults
 DQN_LEARNING_RATE    = 0.001
 DQN_EPS_DECAY        = 0.9984    # reaches eps_end ≈ 0.02 in ~5000 episodes
 DQN_DEFAULT_EPISODES = 5000
@@ -92,7 +53,7 @@ DQN_TARGET_UPDATE    = 250
 DQN_TRAIN_EVERY      = 1
 DQN_INPUT_SIZE       = 40        # 2 position + 23 dirt + 5 history + 10 DNUT
 
-# --- File paths ---------------------------------------------------------------
+# File paths
 QL_MODEL_PATH      = os.path.join(MODELS_DIR, "q_table.pkl")
 SARSA_MODEL_PATH   = os.path.join(MODELS_DIR, "sarsa_table.pkl")
 DQN_MODEL_PATH     = os.path.join(MODELS_DIR, "dqn_model.pth")
@@ -101,7 +62,7 @@ QL_HISTORY_PATH    = os.path.join(MODELS_DIR, "ql_history.pkl")
 SARSA_HISTORY_PATH = os.path.join(MODELS_DIR, "sarsa_history.pkl")
 DQN_HISTORY_PATH   = os.path.join(MODELS_DIR, "dqn_history.pkl")
 
-# --- Algorithm info registry --------------------------------------------------
+# Algo registry
 ALGO_INFO = {
     "qlearning": {"label": "Q-Learning",  "model": QL_MODEL_PATH,
                    "history": QL_HISTORY_PATH,    "color": "#2ECC71"},
@@ -111,7 +72,7 @@ ALGO_INFO = {
                    "history": DQN_HISTORY_PATH,   "color": "#3498DB"},
 }
 
-# Room colours for matplotlib grid (RGB 0-1)
+# Room colors for matplotlib grid (RGB 0-1)
 _ROOM_COLORS = {
     EMPTY:       [0.31, 0.31, 0.31],
     KITCHEN:     [1.00, 1.00, 0.70],
@@ -123,9 +84,7 @@ ACTION_NAMES = {0: "Forward", 1: "Backward", 2: "Left", 3: "Right",
                 4: "Wait", 5: "Clean"}
 
 
-# ============================================================================
-# UTILITY HELPERS
-# ============================================================================
+# Helpers
 
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
@@ -183,9 +142,7 @@ def _algo_color(algo):
     return ALGO_INFO[algo]["color"]
 
 
-# ============================================================================
-# DQN FEATURE EXTRACTION
-# ============================================================================
+# DQN feature extraction
 
 def _env_to_features(env):
     """
@@ -224,9 +181,7 @@ def _env_to_features(env):
     return features
 
 
-# ============================================================================
-# BANNER / MENU
-# ============================================================================
+# Banner / menu
 
 def print_banner():
     print("\n")
