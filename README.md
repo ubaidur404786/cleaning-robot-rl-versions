@@ -92,8 +92,26 @@ From `v3/results/results_20260314_024545.json` (last 100 episodes):
 - **v2**: all agents solve the task reliably; SARSA is the most stable (low variance) and efficient.
 - **v3**: map/objective complexity is much higher; DQN leads on reward/coverage, but full mission completion is still unsolved in this snapshot.
 
+
 ## Main plots by version
 
 - **v1**: notebook plots in `v1/Qlearning_VS_SARSA/notebook.ipynb` and `notebook_dirt_patterns.ipynb`
 - **v2**: `v2/plots/comparison_learning_curves.png`, `comparison_optimal_paths.png`, `comparison_bars.png`, `comparison_smart_analysis.png`
 - **v3**: `v3/results/comparison_learning_curves.png`, `comparison_optimal_paths.png`, `comparison_bars.png`, `comparison_smart_analysis.png`
+
+
+## References
+
+1. Path Planning of Cleaning Robot with Reinforcement Learning.  
+   https://arxiv.org/pdf/2208.08211
+
+2. A Beginner’s Guide to Q-Learning: Understanding with a Simple Gridworld Example.  
+   https://medium.com/@goldengrisha/a-beginners-guide-to-q-learning-understanding-with-a-simple-gridworld-example-2b6736e7e2c9
+
+3. SARSA: A Beginner’s Guide to Temporal Difference Learning.  
+   https://shivang-ahd.medium.com/sarsa-a-beginners-guide-to-temporal-difference-learning-3d72b1011fd8
+
+4. Deep Q-Learning Explained.  
+   https://www.geeksforgeeks.org/deep-learning/deep-q-learning/
+
+5. Reinforcement Learning Lecture Notes from course material.
