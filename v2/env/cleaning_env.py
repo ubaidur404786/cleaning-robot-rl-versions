@@ -385,9 +385,9 @@ class CleaningEnv(gym.Env):
         --------
         int
             Value 0-7 representing room dirty status
-            - Bit 0 (value 1): Kitchen has dirty tiles
-            - Bit 1 (value 2): Living room has dirty tiles
-            - Bit 2 (value 4): Hallway has dirty tiles
+            - 2^0=Bit 0 (value 1): Kitchen has dirty tiles
+            - 2^1=Bit 1 (value 2): Living room has dirty tiles
+            - 2^2= Bit 2 (value 4): Hallway has dirty tiles
             
         Examples:
         ---------
